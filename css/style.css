@@ -1,0 +1,273 @@
+@charset "UTF-8";
+body{
+    background-color: rgb(127, 255, 212);
+    outline: solid 1px black;
+    height: 520px;
+}
+.title {
+    color: rgb(0, 0, 0);
+    text-align: center;
+    left: 50%;
+    position: relative;
+    font-size: 12px;
+    line-height: 28px;
+}
+.Home .title{
+    width: 300px;
+    margin-left: -150px;
+}
+.widebox{
+    margin: 0;
+    width: 360px;
+    left: 50%;
+    margin-left: -180px;
+    height: 400px;
+    position: relative;
+    text-align: center;
+    outline: dashed 2px black;
+    font-size: 12px;
+}
+.Home .widebox{
+    height: auto;
+}
+/* .centering {
+    outline: solid 2px red;
+} */
+.Home .centering{
+    height: 120px;
+}
+a.button-href{
+    display: contents;
+    outline: solid 8px green;
+}
+.largeButton{
+    border: 1;
+    padding: 0;
+    height: 60px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bolder;
+    color: black;
+    border-radius: 30px;
+    vertical-align: text-top;
+    line-height: 4px;
+    box-shadow:
+        inset 2px 2px 3px rgba(255, 255, 255, 0.396),
+        inset -2px -2px 3px rgba(0, 0, 0, 0.4);
+}
+.largeButton:active {
+    box-shadow: 
+        inset -2px -2px 3px rgba(255, 255, 255, 0.396),
+        inset 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+#inputResult {background-color: rgb(244, 156, 233);}
+#inputResult:hover {background-color: rgb(248, 98, 228);}
+#watchResult {background-color:rgb(138, 208, 240);}
+#watchResult:hover {background-color:rgb(50, 167, 236);}
+#Account {background-color: rgb(123, 244, 123);}
+#Account:hover {background-color: rgb(58, 216, 58);}
+#Concept2 {background-color: rgb(241, 241, 103);}
+#Concept2:hover {background-color: rgb(209, 220, 9);}
+
+.Account .title{
+    width: 210px;
+    margin-left: -105px;
+}
+.reference{
+    text-align: right;
+    font-size: 12px;
+}
+.Account .centering{
+    width: 100%;
+    /* outline: solid 4px pink; */
+}
+.forms {
+    /* max-width: 100%; */
+    background-color: rgb(250, 235, 215);
+    position: relative;
+    text-align: center;
+    padding-top: 5px;
+}
+.forms h3{
+    font-size: 18px;
+    position: relative;
+    width: 240px;
+    left: 50%;
+    margin-left: -120px;
+}
+.forms input {
+    width: 200px;
+    height: 30px;
+    font-size: 20px;
+}
+.forms button {
+    width: 100px;
+    height: 30px;
+    font-size: 18px;
+    margin: 5px 0px;
+    background-color: rgb(233, 169, 169);
+}
+.forms button:hover{
+    background-color: rgb(240, 150, 150);
+}
+.forms button:active{
+    background-color: rgb(200, 120, 120);
+}
+.inpRes .title{
+    width: 200px;
+    margin-left: -100px;
+}
+.inpRes .title .space{
+    width: 20px;
+}
+.inpRes #Menus{
+    font-size: 18px;
+    width: 300px;
+    left: 50%;
+    margin-left: -150px;
+    position: relative;
+}
+#Menus span{
+    font-weight: bold;
+    display: block;
+    width: 300px;
+    position: relative;
+    left: 50%;
+    margin-left: -150px;
+    font-size: 18px;
+}
+#Menus .MT input{
+    transform: scale(1.5);
+}
+#Menus table input{
+    width: 48px;
+}
+
+
+@media screen and (max-width:499px) {
+}
+@media screen and (min-width:500px) {
+    body{background-color: rgb(160, 225, 230);}
+    .Home .title{ 
+        width: 400px;
+        margin-left: -200px;
+    }
+    .widebox{
+        font-size: 18px;
+        min-width: 600px;
+        margin-left: -300px;
+    }
+    .Home .centering{height: 90px;}
+    .largeButton{
+        width: 40%;
+        height: 100%;
+        font-size: 18px;
+    }
+    .Account .title{
+        width: 376px;
+        margin-left: -188px;
+    }
+    .inpRes .title{
+        width: 600px;
+        margin-left: -300px;
+        font-size: 16px;
+    }
+    .inpRes .title .br-device{
+        display: none;
+    }
+    .inpRes #Menus{
+        width: 600px;
+        margin-left: -300px;
+    }
+    #Menus span{
+        font-size: 20px;
+        width: 500px;
+        margin-left: -250px;
+    }
+}
+@media screen and (min-width:500px) {
+}
+@media screen and (min-width:1000px) {
+    body{
+        background-color: rgb(209, 209, 255);
+    }
+    .Home .title {
+        width: 800px;
+        margin-left: -400px;
+        font-size: 24px;
+        line-height: 56px;
+    }
+    .widebox{
+        font-size: 24px;
+        width: 1000px;
+        margin-left: -500px;
+    }
+    .largeButton{
+        font-size: 24px;
+        /* margin: 0px 0px 10px 0px; */
+    }
+    .Account .title{
+        width: 1400px;
+        margin-left: -700px;
+        font-size: 24px;
+        line-height: 56px;
+    }
+    .reference{font-size: 18px;}
+    .Account .centering{
+        height: 400px;
+    }
+    .forms {
+        width: 600px;  
+    }
+    .forms h3{
+        width: 600px;
+        margin-left: -300px;
+        display: flex;
+    }
+    .forms .tags{
+        min-width: 200px;
+        margin-left: 60px;
+        vertical-align: center;
+    }
+    .forms input{
+        width: 240px;
+    }
+    .reference{font-size: 24px;}
+    .Account .centering{
+        height: 400px;
+        width: 1000px;
+    }
+    .forms {
+        width: 1000px;
+        outline: solid 2px black;
+    }
+    .forms h3{
+        width: 1000px;
+        margin-left: -500px;
+    }
+    .forms .tags{
+        min-width: 300px;
+        font-size: 32px;
+        margin-left: 100px;
+    }
+    .forms input{
+        width: 500px;
+        height: 40px;
+        font-size: 44px;
+    }
+    .forms button{
+        height: 50px;
+    }
+    .inpRes .title{
+        font-size: 18px;
+    }
+    .inpRes #Menus{
+        font-size: 20px;
+        width: 800px;
+        margin-left: -400px;
+    }
+}
+@media screen and (min-width:1000px) {
+    
+}

@@ -1,0 +1,103 @@
+@charset "UTF-8";
+body{
+    background-color: rgb(127, 255, 212);
+    outline: solid 1px black;
+    height: 520px;
+}
+.title {
+    color: rgb(0, 0, 0);
+    text-align: center;
+    width: 300px;
+    left: 50%;
+    margin-left: -150px;
+    position: relative;
+    font-size: 12px;
+    line-height: 28px;
+}
+.widebox{
+    margin: 0;
+    width: 360px;
+    left: 50%;
+    margin-left: -180px;
+    height: auto;
+    position: relative;
+    text-align: center;
+    outline: dashed 2px black;
+    font-size: 12px;
+}
+.centering{
+    height: 120px;
+}
+a.button-href{
+    display: contents;
+    outline: solid 8px green;
+}
+.largeButton{
+    border: 1;
+    padding: 0;
+    height: 60px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bolder;
+    color: black;
+    border-radius: 30px;
+    vertical-align: text-top;
+    line-height: 4px;
+    box-shadow:
+        inset 2px 2px 3px rgba(255, 255, 255, 0.396),
+        inset -2px -2px 3px rgba(0, 0, 0, 0.4);
+}
+.largeButton:active {
+    box-shadow: 
+        inset -2px -2px 3px rgba(255, 255, 255, 0.396),
+        inset 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+#inputResult {background-color: rgb(244, 156, 233);}
+#inputResult:hover {background-color: rgb(248, 98, 228);}
+#watchResult {background-color:rgb(138, 208, 240);}
+#watchResult:hover {background-color:rgb(50, 167, 236);}
+#Account {background-color: rgb(123, 244, 123);}
+#Account:hover {background-color: rgb(58, 216, 58);}
+#Concept2 {background-color: rgb(241, 241, 103);}
+#Concept2:hover {background-color: rgb(209, 220, 9);}
+
+@media screen and (min-width:500px) {
+    body{background-color: rgb(160, 225, 230);}
+    .title{ 
+        width: 400px;
+        margin-left: -200px;
+    }
+    .widebox{
+        font-size: 18px;
+        min-width: 600px;
+        margin-left: -300px;
+    }
+    .centering{height: 90px;}
+    .largeButton{
+        width: 40%;
+        height: 100%;
+        font-size: 18px;
+    }
+}
+
+@media screen and (min-width:1000px) {
+    body{
+        background-color: rgb(209, 209, 255);
+    }
+    .title {
+        width: 800px;
+        margin-left: -400px;
+        font-size: 24px;
+        line-height: 56px;
+    }
+    .widebox{
+        font-size: 24px;
+        width: 1000px;
+        margin-left: -500px;
+    }
+    .largeButton{
+        font-size: 24px;
+        /* margin: 0px 0px 10px 0px; */
+    }
+}
