@@ -8,7 +8,6 @@ const OFF = 1;
 // 初期設定
 addEventListener("DOMContentLoaded", function initial(){
     changeDisplay(["MT", "resultData", "first", "second", "third", "final"], OFF);
-    
 });
 addEventListener("DOMContentLoaded", tabPos);
 addEventListener("resize", tabPos);
