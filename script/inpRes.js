@@ -9,12 +9,11 @@ const OFF = 1;
 addEventListener("DOMContentLoaded", function initial(){
     changeDisplay(["MT", "resultData", "first", "second", "third", "final"], OFF);
     for (let elem of this.document.getElementsByClassName("output")){
-        changeSpan(elem.getElementsByTagName("span")[0], 0)
-    }
+        changeSpan(elem.getElementsByTagName("span")[0], 0);
+    };
 });
 addEventListener("DOMContentLoaded", tabPos);
 addEventListener("resize", tabPos);
-
 
 /**********************************************
  *                    関数                    *
@@ -199,7 +198,7 @@ function moveButton(){
     } else {
         buttonD.style.top = "0px"
     }
-}
+};
 /** resultDataの位置調整 */
 function tabPos(){
     let res = document.getElementById("resultData");
@@ -279,10 +278,10 @@ function colorCheck(idList){
     let cnt = 0;
     for (let id of idList){
         let doc = document.getElementById(id).getElementsByTagName("input")[0];
-        cnt += (doc.style.display=="" && doc.style.backgroundColor=="lightpink")?1:0;
+        cnt += (doc.style.display=="" && doc.style.backgroundColor=="lightpink") ? 1 : 0;
     };
     return cnt
-}
+};
 
 /**************************************************************
  *                 以降はボタン操作等の処理                     *
@@ -503,7 +502,6 @@ class sortSplit {
 let sortUI = (num)=>{
     new sortSplit(num);
 };
-
 /** inputResultで入力されたIDからLogBookページを開き、正しいIDか判断する関数 */
 function openLog(){
     let id = document.getElementById("LogbookID").value;
@@ -516,7 +514,6 @@ function openLog(){
         open(url);
     };
 };
-
 /** 
  * NameとDatetimeを入力可能/不可能にする
  * @param {Boolean} flag フラグ
@@ -539,7 +536,6 @@ function zeroNext(flag){
         };
     };
 };
-
 /** メニューの種類を選択した後に押すボタン */
 function selectMenu(flag = true){
     console.log("selectMenu>", flag)
@@ -584,7 +580,6 @@ function selectMenu(flag = true){
         changeDisabled(["base"], OFF);
     };
 };
-
 /** firstNext */
 function firstNext(flag){
     console.log("firstNext>", flag);
@@ -616,7 +611,6 @@ function firstNext(flag){
         changeDisabled(["MT"], OFF);
     };
 };
-
 /** 表のsecondが押された際にsplitの入力項目を表示する */
 function secondNext(flag = true){
     console.log("secondNext>", flag);
@@ -624,7 +618,7 @@ function secondNext(flag = true){
         // 空白チェック
         if (colorCheck(SECOND) != 0){
             alert("空欄があります");
-            return
+            return;
         };
         // 入力するにチェックが入った状態にする
         document.getElementsByName("split")[0].checked = true;
@@ -711,7 +705,6 @@ function secondNext(flag = true){
         changeDisabled(FIRST, OFF);
     };
 };
-
 /** 
  * class=splitValueの記入可否, input[type=radio]から呼び出し
  * @param {boolean} flag 
@@ -750,7 +743,7 @@ function thirdNext(flag){
         // 入力不可
         changeDisabled(["third"], ON);
         // ボタン再配置
-        moveButton()
+        // moveButton()
     } else {
         // 再表示
         changeDisplay(["secondButton"], ON);
@@ -760,7 +753,6 @@ function thirdNext(flag){
         changeDisabled(SECOND, OFF);
     };
 };
-
 /** final */
 function final(){
     console.log("final>")
@@ -771,4 +763,3 @@ function final(){
     // 入力許可
     changeDisabled(["third"], OFF)
 };
-
