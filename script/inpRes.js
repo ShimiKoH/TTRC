@@ -1,16 +1,29 @@
-const ZERO = ["Name", "DateTime"];
+/** ["LogbookID", "trainDate", "trainTime"] */
+const ZERO = ["LogbookID", "trainDate", "trainTime"];
+/** ["Distance", "Time", "Rest", "Split", "Interval"] */
 const FIRST = ["Distance", "Time", "Rest", "Split", "Interval"];
+/** ["Result", "Average", "Rate"] */
 const SECOND = ["Result", "Average", "Rate"];
+/** ["third"] */
 const THIRD = ["third"];
-const ON = 0;
-const OFF = 1;
+var jsonFile ={
+    id : "",
+    type : "",
+    menu : "",
+    time : "",
+    average : "",
+    rate : "",
+    split : "",
+};
 
-// 初期設定
-addEventListener("DOMContentLoaded", function initial(){
-    changeDisplay(["MT", "resultData", "first", "second", "third", "final"], OFF);
+addEventListener("DOMContentLoaded", ()=>{
+    changeDisplay(ZERO, "revert")
+    changeDisplay(["MT", "resultData", "first", "second", "third"].concat(FIRST, SECOND, THIRD, /*"check"*/), "none");
+    // rePost()
     for (let elem of this.document.getElementsByClassName("output")){
         changeSpan(elem.getElementsByTagName("span")[0], 0);
     };
+    for (let doc of this.document.getElementsByTagName("input")){doc.style.backgroundColor="lightpink"}
 });
 addEventListener("DOMContentLoaded", tabPos);
 addEventListener("resize", tabPos);
@@ -20,23 +33,36 @@ addEventListener("resize", tabPos);
  **********************************************/
 /** idリストを取得してdisplayをonまたはoffにする関数
  * @param {string[]} idList idの文字列リスト
- * @param {number} ONorOFF 表示する>ON=0, 表示しない>OFF=1
+ * @param {boolean} mark revert, none, block, etc...
  */
-function changeDisplay(idList, ONorOFF){
-    let mark = ["", "none"][ONorOFF]
+function changeDisplay(idList, mark){
     for (let id of idList){
-        document.getElementById(id).style.display = mark;
+        let doc = document.getElementById(id);
+        doc.style.display = mark;
+    };
+};
+/** class名からdisplayを変更 
+ * @param {string[]} classNameList
+ * @param {string} mark `none` or `revert`
+ * @param {Document} doc inner doc
+*/
+function changeDisplayByClassNames(classNameList, mark, doc=document){
+    for (let className of classNameList){
+        /** @type {HTMLCollectionOf<HTMLElement>} */
+        let docs = doc.getElementsByClassName(className);
+        for (let elem of docs){
+            elem.style.display = mark
+        };
     };
 };
 /** idリストを取得して配下のinputタグの入力可否を設定 
  * @param {string[]} idList idの文字列リスト 
- * @param {number} ONorOFF 入力不可能>ON=0, 入力可能>OFF=1 */
-function changeDisabled(idList, ONorOFF){
-    let flag = [true, false][ONorOFF]
+ * @param {boolean} mark true>disable false>able */
+function changeDisabled(idList, mark){
     for (let id of idList){
         let inps = document.getElementById(id).getElementsByTagName("input");
         for (let elem of inps){
-            elem.disabled = flag;
+            elem.disabled = mark;
         };
     };
 };
@@ -58,7 +84,7 @@ function inputJudge(id){
     };
     let doc = document.getElementById(id);
     if (doc.style.display == "none"){
-        console.log(id, "skipped");
+        // console.log(id, "skipped");
         return
     };
     let inps = doc.getElementsByTagName("input");
@@ -67,7 +93,7 @@ function inputJudge(id){
         // 判定，カラーチェンジ
         if (val == null | val == ""){
             changeBGC(false, inp);
-        } else if (id == "DateTime"){
+        } else if (ZERO.includes(id)){
             changeBGC(true, inp);
         } else if (parseInt(val) == 0){
             changeBGC(false, inp);
@@ -83,7 +109,7 @@ function inputJudge(id){
             changeBGC(val.length == 4, inp);
         } else if (["Rate"].includes(id)){
             changeBGC(val.length == 2, inp);
-        } else if (id.includes("SplitValue")){
+        } else if (id.includes("splitValue")){
             changeBGC(val.length == 6, inp);
         };
     };
@@ -96,8 +122,10 @@ function inputJudge(id){
 function format(val, elementID){
     if (elementID == "Distance"){
         return pad0(val, 5);
-    } else if (["Split", "Interval", "Rate"].includes(elementID)){
+    } else if (["Rate"].includes(elementID)){
         return pad0(val, 2);
+    } else if(["Interval", "Split"].includes(elementID)){
+        return val;
     } else if (["Time", "Rest"].includes(elementID)){
         let hour, minute, second, res;
         // 0埋めで五桁0:00:00にして各値を取得
@@ -169,35 +197,11 @@ function numSplInt() {
     let num = 0;
     for (let tag of ["Split", "Interval"]) {
         let spl = document.getElementById(tag);
-        if (spl.style.display == "") {
+        if (spl.style.display == "revert") {
             num = parseInt(spl.getElementsByTagName("input")[0].value);
         };
     };
     return num;
-};
-/** 横幅1200px以上のとき，送信ボタンの位置を移動 */
-function moveButton(){
-    let buttonD = document.getElementById("final") //buttonDocument
-    if (window.innerWidth >= 1200){
-        let tH = document.getElementById("resultData").offsetHeight; //tableHeight
-        let buttonH = buttonD.offsetHeight; //buttonHeight
-        let baseH = document.getElementById("base").offsetHeight //baseHeight
-        if (baseH + buttonH > tH){
-            // 中央に配置
-            console.log("center")
-            buttonD.style.left = "50%"
-            buttonD.style.top = "0px"
-            return;
-        } else {
-            // 左のブロックの中央に配置
-            let top = (buttonH+tH-baseH)/2
-            buttonD.style.left = "25%px"
-            buttonD.style.top = "-"+top+"px"
-            console.log("top",top)
-        };
-    } else {
-        buttonD.style.top = "0px"
-    }
 };
 /** resultDataの位置調整 */
 function tabPos(){
@@ -212,20 +216,25 @@ function tabPos(){
 /** inputに入力された値を整形 */
 function convert(id){
     let inp = document.getElementById(id).getElementsByTagName("input")[0];
-    let outs = document.getElementById(id).getElementsByClassName("output")[0].getElementsByTagName("span");
     let val = inp.value;
-    val = val.replace(/[^0-9]+/i, "");
+    val = (["trainDate", "trainTime"].includes(id)) ? val : val.replace(/[^0-9]+/i, "");
     inp.value = val;
     inputJudge(id);
+    if (ZERO.includes(id)){return};
     let len = val.length;
     if (len == 0){val = "0"};
     val = format(val, id);
+    let outs = document.getElementById(id).getElementsByClassName("output")[0].getElementsByTagName("span");
     if (id == "Time"){
         let m10 = (val.slice(0,1)=="0") ? val.slice(1,2) : val.slice(0,1)+":"+val.slice(1,2);
         for (let i=0; i<outs.length; i++){
             outs[i].textContent = (i==0) ? m10 : val.slice(i+1, i+2);
             changeSpan(outs[i], i-len);
         };
+    } else if (["Interval", "Split"].includes(id)){
+        outs[0].textContent = val;
+        changeSpan(outs[0], parseInt(val));
+        outs[0].style.fontWeight = (parseInt(val)>0) ? "600":"500";
     } else {
         for (let i=0; i<val.length; i++){
             outs[i].textContent = val.slice(i,i+1);
@@ -243,7 +252,7 @@ function convert(id){
  */
 function changeSpan(elem, flag){
     // background
-    elem.style.backgroundColor = (flag==0)?"black":"";
+    elem.style.backgroundColor = (flag==0)?"black":"revert";
     // fontcolor
     elem.style.color = (flag==0)?"white":"black";
     // bold
@@ -277,16 +286,18 @@ function ResAve(){
 function colorCheck(idList){
     let cnt = 0;
     for (let id of idList){
-        let doc = document.getElementById(id).getElementsByTagName("input")[0];
-        cnt += (doc.style.display=="" && doc.style.backgroundColor=="lightpink") ? 1 : 0;
+        let doc = document.getElementById(id);
+        let inp = doc.getElementsByTagName("input")[0];
+        console.log(`ID\t\t${id}\nName\t\t${inp.name}\nDisplay\t\t${doc.style.display}\nColor\t\t${inp.style.backgroundColor}\nDisabled\t${inp.disabled}`)
+        cnt += (doc.style.display == "revert" && inp.style.backgroundColor=="lightpink") ? 1 : 0;
     };
+    return 0
     return cnt
 };
-
 /**************************************************************
  *                 以降はボタン操作等の処理                     *
 ***************************************************************/
-/** splitVlaueの並べ替えのソース*/
+/** splitVlaueの並べ替えのクラス*/
 class sortSplit {
     /** 
      * @param {number} i identifier
@@ -496,15 +507,9 @@ class sortSplit {
         };
     };
 };
-/** thirdのsplitValueを入れ替える 
- * @param {number} num splitValueの数
-*/
-let sortUI = (num)=>{
-    new sortSplit(num);
-};
 /** inputResultで入力されたIDからLogBookページを開き、正しいIDか判断する関数 */
 function openLog(){
-    let id = document.getElementById("LogbookID").value;
+    let id = document.getElementById("LogbookID").getElementsByTagName("input")[0].value;
     if (id == "") {
         alert("IDを入力してください");
     } else {
@@ -528,11 +533,11 @@ function zeroNext(flag){
             return;
         } else {
             // 表示
-            changeDisplay(["MT", "menuButton"], ON);
+            changeDisplay(["MT", "menuButton"], "revert");
             // 非表示
-            changeDisplay(["zeroButton"], OFF);
+            changeDisplay(["zeroButton"], "none");
             // 入力不可
-            changeDisabled(ZERO, ON);
+            changeDisabled(ZERO, true);
         };
     };
 };
@@ -549,13 +554,15 @@ function selectMenu(flag = true){
             ["Time", "Rest", "Interval"],
         ];
         let cnt = 0;
-        for (let i = 0; i < types.length; i++){
+        let i = 0;
+        for (i = 0; i < types.length; i++){
+            // console.log(i, types[i].checked)
             if (types[i].checked){
                 cnt += 1;
                 // すべての列を非表示
-                changeDisplay(FIRST, OFF)
+                changeDisplay(FIRST, "none")
                 // 当該列を再表示
-                changeDisplay(onDisplay[i], ON)
+                changeDisplay(onDisplay[i], "revert")
             };
         };
         if (cnt == 0){
@@ -563,21 +570,21 @@ function selectMenu(flag = true){
             return;
         } else {
             //表示
-            changeDisplay(["resultData", "first","firstButton"], ON);
+            changeDisplay(["resultData", "first","firstButton"], "revert");
             //非表示
-            changeDisplay(["menuButton"], OFF);
+            changeDisplay(["menuButton"], "none");
             // 入力不可
-            changeDisabled(["MT"], ON);
+            changeDisabled(["MT"], true);
             // tableの位置調整
             tabPos();
         };
     } else {
         // 再表示
-        changeDisplay(["zeroButton"], ON);
+        changeDisplay(["zeroButton"], "revert");
         // 非表示
-        changeDisplay(["MT"], OFF);
+        changeDisplay(["MT"], "none");
         // 入力許可
-        changeDisabled(["base"], OFF);
+        changeDisabled(["base"], false);
     };
 };
 /** firstNext */
@@ -589,26 +596,28 @@ function firstNext(flag){
             alert("空欄があります");
             return;
         };
-        changeDisplay(SECOND, OFF);
+        changeDisplay(SECOND, "none");
         // ResultかAverageを表示
         if (ResAve()){
-            changeDisplay(["Result", "Rate"], ON);
+            changeDisplay(["Result", "Rate"], "revert");
         } else {
-            changeDisplay(["Average", "Rate"], ON);
+            changeDisplay(["Average", "Rate"], "revert");
         };
         // 表示
-        changeDisplay(["second"], ON);
+        changeDisplay(["second"], "revert");
         // 非表示
-        changeDisplay(["firstButton"], OFF);
+        changeDisplay(["firstButton"], "none");
         // 入力不可
-        changeDisabled(FIRST, ON);
+        changeDisabled(FIRST, "revert");
     } else {
         // 再表示
-        changeDisplay(["menuButton"], ON);
+        changeDisplay(["menuButton"], "revert");
         // 非表示
-        changeDisplay(["resultData"], OFF);
+        changeDisplay(["resultData"], "none");
         // 入力許可
-        changeDisabled(["MT"], OFF);
+        changeDisabled(["MT"], false);
+
+        zeroNext(true);
     };
 };
 /** 表のsecondが押された際にsplitの入力項目を表示する */
@@ -621,12 +630,12 @@ function secondNext(flag = true){
             return;
         };
         // 入力するにチェックが入った状態にする
-        document.getElementsByName("split")[0].checked = true;
+        document.getElementsByName("sp")[0].checked = true;
         // class = "splitValue"の数の検索
         let cnt = document.getElementsByClassName("splitValue").length;
         // Split/Intervalの表示するべき数
         let num = numSplInt();
-        console.log("exist:",cnt,"/create:",num)
+        // console.log("exist:",cnt,"/create:",num)
         // 既にあるsplitValueの数が表示するべき数に一致する場合，追加過程をスキップ
         if (cnt != num){
             // 既にあるsplitValueを削除
@@ -636,6 +645,7 @@ function secondNext(flag = true){
             inp.setAttribute("type", "text");
             inp.setAttribute("inputmode", "numeric");
             inp.setAttribute("maxlength", "6");
+            inp.style.backgroundColor="lightpink";
             // sortPictureのノード作成
             let img = document.createElement("img");
             img.setAttribute("class", "sort-pic")
@@ -681,28 +691,32 @@ function secondNext(flag = true){
                 // 1行目のデータのノードを新規作成
                 let td1 = document.createElement("td");
                 td1.append(i.toString());
+                td2.getElementsByTagName("input")[0].setAttribute("oninput", `convert('${id}')`);
+                td2.getElementsByTagName("input")[0].setAttribute("name", id)
                 child_tr.append(td0.cloneNode(true), td1, td2.cloneNode(true), td3.cloneNode(true));
-                child_tr.getElementsByTagName("input")[0].setAttribute("oninput", `convert('${id}')`);
-                // console.log("${i}");
                 sep_tr.setAttribute("id", `separator${i}`);
                 parent.append(child_tr, sep_tr.cloneNode(true));
             };
             document.getElementById("third").children[2].after(parent);
-            sortUI(num);
+            new sortSplit(num);
         };
+        
+
         // 表示
-        changeDisplay(THIRD, ON);
+        changeDisplay(THIRD, "revert");
         // 非表示
-        changeDisplay(["secondButton"], OFF);
+        changeDisplay(["secondButton"], "none");
         // 入力不可
-        changeDisabled(SECOND, ON);
+        changeDisabled(SECOND, true);
+        inputSplit(true)
     } else {
         // 再表示
-        changeDisplay(["firstButton"], ON);
+        changeDisplay(["firstButton"], "revert");
         // 非表示
-        changeDisplay(["second"], OFF);
+        changeDisplay(["second"], "none");
         // 入力許可
-        changeDisabled(FIRST, OFF);
+        changeDisabled(FIRST, false);
+        selectMenu(true);
     };
 };
 /** 
@@ -711,16 +725,12 @@ function secondNext(flag = true){
  */
 function inputSplit(flag){
     console.log("inputSplit>",flag)
-    function offSpVal(flag){
+    function offSpVal(mark){
         for (let elem of document.getElementsByClassName("splitValue")) {
-            elem.style.display = flag;
+            elem.style.display = mark;
         };
     };
-    if (flag) {
-        offSpVal("");
-    } else {
-        offSpVal("none");
-    };
+    flag ? offSpVal("revert") : offSpVal("none")
 };
 /** thirdの次へボタンの処理 */ 
 function thirdNext(flag){
@@ -736,30 +746,194 @@ function thirdNext(flag){
             alert("空欄があります");
             return;
         };
-        // 表示
-        changeDisplay(["final"], ON);
         // 非表示
-        changeDisplay(["thirdButton"], OFF);
+        changeDisplay(["thirdButton"], "none");
         // 入力不可
-        changeDisabled(["third"], ON);
-        // ボタン再配置
-        // moveButton()
+        changeDisabled(["third"], true);
+        submitCheck();
     } else {
         // 再表示
-        changeDisplay(["secondButton"], ON);
+        changeDisplay(["secondButton"], "revert");
         // 非表示
-        changeDisplay(["third"], OFF);
+        changeDisplay(["third"], "none");
         // 記入許可
-        changeDisabled(SECOND, OFF);
+        changeDisabled(SECOND, false);
+        firstNext(true);
     };
 };
-/** final */
-function final(){
-    console.log("final>")
-    // 再表示
-    changeDisplay(["thirdButton"], ON);
-    // 非表示
-    changeDisplay(["final"], OFF);
-    // 入力許可
-    changeDisabled(["third"], OFF)
+/** 
+ * @param {string[]} idList list of id
+ * @param {string} by Tag, Class,...
+ * @param {string} name "input", "output", ...
+ * @returns {string}
+ */
+function getValue(idList, by, name){
+    /** @type {HTMLElement} */
+    let doc
+    /** @type {string} */
+    let text
+    /** @type {string} */
+    let id
+    let cnt=0
+    for (id of idList){
+        doc = document.getElementById(id)
+        if(doc.style.display != "none"){
+            cnt += 1;
+            break;
+        };
+    };
+    if (cnt == 0){return "None"}
+    if (by == "Tag"){
+        /** @type {HTMLCollectionOf<HTMLInputElement>} */
+        let inps = doc.getElementsByTagName(name);
+        if (inps.length > 1){
+            for (let inp of inps){
+                if (inp.checked){text = inp.value};
+            };
+        } else {text = inps[0].value;};
+    } else if (by == "Class"){
+        /** @type {HTMLElement} */
+        let elem = doc.getElementsByClassName(name)[0];
+        text = elem.innerText + ((id == "Distance")?"m":"");
+    };
+    return text;
+};
+function submitCheck(){
+
+    let valueId = getValue(["LogbookID"], "Tag", "input");
+    let valueDate = getValue(["trainDate"], "Tag", "input");
+    let valueTime = getValue(["trainTime"], "Tag", "input");
+    let valueType = getValue(["MT"], "Tag", "input");
+    let valueMenu = getValue(["Distance", "Time"], "Class", "output");
+    let valueRest = getValue(["Rest"], "Class", "output");
+    let valueAverage = getValue(["Result", "Average"], "Class", "output");
+    let valueRate = getValue(["Rate"], "Class", "output");
+    let spNum = getValue(["Split", "Interval"], "Class", "output");
+    let valueSplit = "";
+    
+    valueTime = valueDate.concat(" ", valueTime)
+    if (valueType.endsWith("Distance")){
+        while (valueMenu.startsWith("0")) {
+            valueMenu=valueMenu.slice(1);
+        };
+    } else if (valueType.endsWith("Time")){
+        while (valueMenu.startsWith("0") && valueMenu.length>4) {
+            valueMenu=valueMenu.slice(1);
+        };
+    };
+    if (valueType.startsWith("Interval")){valueMenu = spNum.concat("x", valueMenu, "/", valueRest, "r");};
+    
+    for (let i=1; i<=parseInt(spNum); i++){
+        valueSplit = valueSplit.concat(getValue([`splitValue${i}`], "Class", "output"), "->")
+    };
+    if (valueSplit.includes("None")){valueSplit = "None"}
+    valueSplit = valueSplit.slice(0, valueSplit.length-2);
+
+    console.log(`ID\t\t\t${valueId}\nDateTime\t${valueTime}\nMenu\t\t${valueMenu}\nAverage\t\t${valueAverage}\nRate\t\t${valueRate}\nSplit\t\t${valueSplit}`)
+    
+    let form = document.getElementById("check");
+    
+    let items = {valueId, valueTime, valueType, valueMenu, valueAverage, valueRate, valueSplit};
+    let keys = ["id","time","type","menu","average","rate","split"]
+
+    for (let i=0; i<keys.length; i++){
+        let id = Object.keys(items)[i]
+        let doc = document.getElementById(id);
+        let docVal = doc.getElementsByClassName("value")[0];
+        /** @type {string} */
+        let text = items[id];
+        let parent = document.createDocumentFragment();
+        let br = document.createElement("br");
+        if (id=="valueSplit"){
+            let splitArray = items[id].split("->");
+            for (let spTxt of splitArray){
+                parent.append(spTxt, br.cloneNode(true))
+            };
+            while (docVal.firstChild) {
+                docVal.removeChild(docVal.firstChild);                
+            };
+            docVal.appendChild(parent);
+        } else {
+            docVal.textContent = text;
+        };
+        if(id=="valueAverage"){
+            let sp=doc.getElementsByTagName("span")
+            if(valueMenu=="2000m"){
+                sp[0].style.display="none";sp[1].style.display="contents";
+            } else {
+                sp[0].style.display="contents";sp[1].style.display="none";
+            };
+        };
+        jsonFile[keys[i]] = items[Object.keys(items)[i]];
+    };
+    console.log(jsonFile)
+    form.style.display="revert";
+};
+/** @param {boolean} flag */
+function post(flag) {
+    let iframe = document.getElementsByTagName("iframe")[0];
+    let docInner = iframe.contentDocument;
+    const fetch_reset = () => {
+        changeDisplayByClassNames(["load-ing"], "revert", docInner);
+        changeDisplayByClassNames(["load-succ", "load-fail", "load-button"], "none", docInner);
+    };
+    const fetch_succeed = () => {
+        changeDisplayByClassNames(["load-ing"], "none", docInner);
+        changeDisplayByClassNames(["load-succ", "load-button"], "revert", docInner);
+    };
+    const fetch_fail = () => {
+        changeDisplayByClassNames(["load-ing"], "none", docInner);
+        changeDisplayByClassNames(["load-fail", "load-button"], "revert", docInner); 
+    };
+    fetch_reset();
+    if (flag) {
+        iframe.style.display = "revert";
+        let url = "https://script.google.com/macros/s/AKfycbyvs3YIl5LycmkcVVLBQ7rPtVjDcClEH218dBS5sDk7TABC2Yf46of_2ghg0PsODeuU/exec";
+        let data = JSON.stringify(jsonFile);
+        let options = {
+            "method":"POST",
+            "headers":{
+                "Accept":"application/json",
+                "Content-Type":"text/plain",
+            },
+            "body":data,
+            "mode":"cors",
+        };
+        fetch(url, options)
+            .then(
+                (response) => {
+                    changeDisplayByClassNames(["load-ing"], "none", docInner);
+                    if (response.ok){
+                        console.log("Success<js>");
+                        let jsonResponse = response.json();
+                        console.log(jsonResponse);
+                        jsonResponse.then((res)=>{
+                            console.log(res);
+                            if (res.status){
+                                fetch_succeed();
+                            } else {
+                                fetch_fail();
+                                docInner.getElementsByClassName("error-message")[0].textContent = res.message
+                            }
+                        })
+                    } else {
+                        fetch_fail();
+                        console.log("failed<js>");
+                    };
+                },
+                (response) => {
+                    fetch_fail();
+                    console.log("cannot fetch<js>");
+                },
+            );
+    } else {
+        iframe.style.display = "none";
+        changeDisplay(["check"], "none");
+        changeDisplay(["thirdButton"], "revert");
+        changeDisabled(["third"], false);
+    };
+};
+function rePost(){
+    post(false);
+    thirdNext(true);
 };
