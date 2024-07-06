@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-ua-compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no">
+        <title>エルゴの結果を記入</title>
+        <link rel="stylesheet" href="../css/animation.css">
+    </head>
+    <body>
+        <div class="loading-animation">
+            <div class="wait-block">
+                <p class="load-text load-ing">送信中です<br>しばらくお待ちください</p>
+                <p class="load-text load-succ">完了しました</p>
+                <p class="load-text load-fail">失敗しました<br>原因:<span class="error-message"></span></p>
+                <div class="image load-ing"></div>
+                <div class="image load-succ"></div>
+                <div class="image load-fail"></div>
+                <div class="load-button">
+                    <button type="button" onclick="history.back()">前のページに戻る</button>
+                    <button type="button" onclick="parent.location.reload()" class="load-succ">別の結果を入力する</button>
+                    <button type="button" onclick="parent.rePost()" class="load-fail">やりなおす</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
