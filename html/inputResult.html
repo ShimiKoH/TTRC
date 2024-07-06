@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-ua-compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no">
-        <title>エルゴの結果を記入</title>
+        <title>エルゴの結果入力フォーム</title>
         <link rel="stylesheet" href="../css/inpresStyle.css">
         <script src="../script/inpRes.js"></script>
     </head>
@@ -19,11 +19,11 @@
             <h1>エルゴの結果を<br class="br-device">入力してください</h1>
         </div>
         <div class="widebox">
-            <form>
+            <div id="datas">
                 <div id="base">
                     <div id="Name">
                         <h4>Logbook IDを入力してください</h4>
-                        <label><input id="LogbookID" type="text" inputmode="numeric" oninput="value=value.replace(/[^0-9]+/i, '')" ></label>
+                        <label id="LogbookID"><input type="text" inputmode="numeric" name="ID" oninput="convert('LogbookID')"></label>
                         <a target="_blank" onclick="openLog()">
                             <button type="button">ID判定</button>
                         </a>
@@ -33,8 +33,8 @@
                             練習日と時間を入力してください<br>
                             (時間はだいたいでよい)
                         </h4>
-                        <label><input id="trainDate" type="date"></label>
-                        <label><input id="trainTime" type="time"></label>
+                        <label id="trainDate"><input type="date" name="tDate" oninput="convert('trainDate')"></label>
+                        <label id="trainTime"><input type="time" name="tTime" oninput="convert('trainTime')"></label>
                     </div>
                     <div>
                         <button id="zeroButton" type="button" onclick="zeroNext(true)">次へ</button>
@@ -42,11 +42,11 @@
                     <div id="MT">
                         <!-- Menu Type -->
                         <h4>メニューの種類を選択してください</h4>
-                        <label><input type="radio" name="Type" value="Fixed Distance">Single Distance</label>
-                        <label><input type="radio" name="Type" value="Fixed Time">Single Time</label>
+                        <label><input type="radio" name="Type" value="Single Distance" checked>Single Distance</label>
+                        <label><input type="radio" name="Type" value="Single Time">Single Time</label>
                         <br>
-                        <label><input type="radio" name="Type" value="Interval:Distance">Interval Distance</label>
-                        <label><input type="radio" name="Type" value="Interval:Time">Interval Time</label>
+                        <label><input type="radio" name="Type" value="Interval Distance">Interval Distance</label>
+                        <label><input type="radio" name="Type" value="Interval Time">Interval Time</label>
                         <div id="menuButton">
                             <button type="button" onclick="selectMenu(false)">戻る</button>
                             <button type="button" onclick="selectMenu(true)">次へ</button>
@@ -77,10 +77,10 @@
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Distance')" maxlength="5">
+                                    <input type="text" inputmode="numeric" name="Distance" oninput="convert('Distance')" maxlength="5">
                                 </td>
                                 <td class="output">
-                                    <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span>
+                                    <span>0</span><span>0</span><span>0</span><span class="behind">0</span><span class="behind">0</span>
                                 </td>
                                 <td class="col4">m</td>
                             </tr>
@@ -95,10 +95,10 @@
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Time')" maxlength="5">
+                                    <input type="text" inputmode="numeric" name="Time" oninput="convert('Time')" maxlength="5">
                                 </td>
                                 <td class="output">
-                                    <span>0</span>:<span>0</span><span>0</span>:<span>0</span><span>0</span>
+                                    <span>0</span><span>0</span>:<span>0</span><span>0</span>
                                 </td>
                             </tr>
                             <tr id="Rest">
@@ -113,10 +113,10 @@
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Rest')" maxlength="4">
+                                    <input type="text" inputmode="numeric" name="Rest" oninput="convert('Rest')" maxlength="3">
                                 </td>
                                 <td class="output">
-                                    <span>0</span><span>0</span>:<span>0</span><span>0</span>
+                                    <span>0</span>:<span>0</span><span>0</span>
                                 </td>
                                 <td class="col4">off</td>
                             </tr>
@@ -125,16 +125,15 @@
                                     <details>
                                         <summary>Split</summary>
                                         <span>
-                                            設定したスプリット数<br>
-                                            数値をそのまま入力
+                                            設定したスプリット数
                                         </span>
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Split')" maxlength="2">
+                                    <input type="text" inputmode="numeric" name="Split" oninput="convert('Split')" maxlength="2">
                                 </td>
                                 <td class="output">
-                                    <span>0</span><span>0</span>
+                                    <span>0</span>
                                 </td>
                             </tr>
                             <tr id="Interval" class="input-short">
@@ -142,15 +141,15 @@
                                     <details>
                                         <summary>Interval</summary>
                                         <span>
-                                            数値をそのまま入力
+                                            数値を入力<br>
                                         </span>
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Interval')" maxlength="2">
+                                    <input type="text" inputmode="numeric" name="Interval" oninput="convert('Interval')" maxlength="2">
                                 </td>
                                 <td class="output">
-                                    <span>0</span><span>0</span>
+                                    <span>0</span>
                                 </td>
                             </tr>
                             <tr id="firstButton">
@@ -173,7 +172,7 @@
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Result')" maxlength="4">
+                                    <input type="text" inputmode="numeric" name="Result" oninput="convert('Result')" maxlength="4">
                                 </td>
                                 <td class="output">
                                     <span>0</span>:<span>0</span><span>0</span>.<span>0</span>
@@ -191,7 +190,7 @@
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Average')" maxlength="4">
+                                    <input type="text" inputmode="numeric" name="Average" oninput="convert('Average')" maxlength="4">
                                 </td>
                                 <td class="output">
                                     <span>0</span>:<span>0</span><span>0</span>.<span>0</span>
@@ -208,7 +207,7 @@
                                     </details>
                                 </td>
                                 <td>
-                                    <input type="text" inputmode="numeric" oninput="convert('Rate')" maxlength="2">
+                                    <input type="text" inputmode="numeric" name="Rate" oninput="convert('Rate')" maxlength="2">
                                 </td>
                                 <td class="output">
                                     <span>0</span><span>0</span>
@@ -223,10 +222,10 @@
                             </tr>
                         </tbody>
                         <tbody id="third">
-                            <tr>
+                            <tr style="display: none;">
                                 <td colspan="5">
-                                    <label><input type="radio" name="split" onclick="inputSplit(true)" value="splitKnown" checked>入力する</label>
-                                    <label><input type="radio" name="split" onclick="inputSplit(false)" value="splitUnknown">入力しない</label>
+                                    <label><input type="radio" name="sp" onclick="inputSplit(true)" value="splitKnown" checked>入力する</label>
+                                    <label><input type="radio" name="sp" onclick="inputSplit(false)" value="splitUnknown">入力しない</label>
                                 </td>
                             </tr>
                             <tr class="tag">
@@ -236,7 +235,7 @@
                                         <span>
                                             Average,Rateを入力<br>
                                             Ave1:58.0 Rate19<br>
-                                            &rarr;[158019]<br>
+                                            &rarr;158019<br>
                                             &#x2261;で入れ替え可能
                                         </span>
                                     </details>
@@ -257,11 +256,49 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="final">
-                    <button type="button" onclick="final()">戻る</button>
-                    <button id="submit" type="submit">送信</button>
+            </div>
+            <div id="check">
+                <h2>
+                    以下の内容で送信します
+                </h2>
+                <table>
+                    <tbody>
+                        <tr id="valueId">
+                            <td class="tag">ID</td>
+                            <td class="value"></td>
+                        </tr>
+                        <tr id="valueTime">
+                            <td class="tag">DateTime</td>
+                            <td class="value"></td>
+                        </tr>
+                        <tr id="valueType">
+                            <td class="tag">MenuType</td>
+                            <td class="value"></td>
+                        </tr>
+                        <tr id="valueMenu">
+                            <td class="tag">Menu</td>
+                            <td class="value"></td>
+                        </tr>
+                        <tr id="valueAverage">
+                            <td class="tag"><span>Average</span><span>Result</span></td>
+                            <td class="value"></td>
+                        </tr>
+                        <tr id="valueRate">
+                            <td class="tag">Rate</td>
+                            <td class="value"></td>
+                        </tr>
+                        <tr id="valueSplit">
+                            <td class="tag">Split</td>
+                            <td class="value"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <button onclick="post(false)">いいえ</button>
+                    <button onclick="post(true)">はい</button>
                 </div>
-            </form>
+            </div>
         </div>
+        <iframe class="loading" src="./loading.html" frameborder="0"></iframe>
     </body>
 </html>
